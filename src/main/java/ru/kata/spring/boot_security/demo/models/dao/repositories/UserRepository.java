@@ -1,4 +1,4 @@
-package ru.kata.spring.boot_security.demo.dao.repositories;
+package ru.kata.spring.boot_security.demo.models.dao.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

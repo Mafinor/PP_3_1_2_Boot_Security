@@ -10,6 +10,8 @@ import ru.kata.spring.boot_security.demo.util.UserMapper;
 
 import java.util.List;
 
+import static ru.kata.spring.boot_security.demo.util.UserMapper.toDTO;
+
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserRestController {
@@ -27,19 +29,19 @@ public class UserRestController {
 
     @PostMapping
     public ResponseEntity<UserDTO> addUser(@RequestBody User newUser) {
-        UserDTO userDTO = UserMapper.toDTO(userService.saveOrUpdate(newUser));
+        UserDTO userDTO = toDTO(userService.saveOrUpdate(newUser, newUser.getRoles().stream().findAny().orElseThrow().getName()));
         return ResponseEntity.ok(userDTO);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> oneUser(@PathVariable Long id) {
-        UserDTO userDTO = UserMapper.toDTO(userService.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found")));
+        UserDTO userDTO = toDTO(userService.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found")));
         return ResponseEntity.ok(userDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDTO> updateUser(@RequestBody User user) {
-        UserDTO userDTO = UserMapper.toDTO(userService.saveOrUpdate(user));
+    public ResponseEntity<UserDTO> updateUser(@RequestBody User user, @PathVariable Long id) {
+        UserDTO userDTO = toDTO(userService.saveOrUpdate(user, id));
         return ResponseEntity.ok(userDTO);
     }
 

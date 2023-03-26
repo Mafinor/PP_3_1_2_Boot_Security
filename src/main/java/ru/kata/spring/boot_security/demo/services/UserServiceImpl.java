@@ -3,9 +3,9 @@ package ru.kata.spring.boot_security.demo.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.dao.UserDao;
+import ru.kata.spring.boot_security.demo.models.dao.UserDao;
 import ru.kata.spring.boot_security.demo.models.User;
-import ru.kata.spring.boot_security.demo.dao.repositories.UserRepository;
+import ru.kata.spring.boot_security.demo.models.dao.repositories.UserRepository;
 import ru.kata.spring.boot_security.demo.security.UserResolver;
 
 import java.util.*;
@@ -54,8 +54,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User saveOrUpdate(User user) {
-        return null;
+    @Transactional
+    public User saveOrUpdate(User user, Long id) {
+        User resolvedUser = userResolver.resolveUserPasswordAndRole(user, user.getRoles().stream().findAny().orElseThrow().getName());
+        userDao.save(resolvedUser);
+        return resolvedUser;
     }
 
     @Override

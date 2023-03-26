@@ -3,11 +3,12 @@ package ru.kata.spring.boot_security.demo.security;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-import ru.kata.spring.boot_security.demo.dao.repositories.RoleRepository;
-import ru.kata.spring.boot_security.demo.dao.repositories.UserRepository;
+import ru.kata.spring.boot_security.demo.models.dao.repositories.RoleRepository;
+import ru.kata.spring.boot_security.demo.models.dao.repositories.UserRepository;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -26,7 +27,8 @@ public class UserResolverImpl implements UserResolver {
     @Override
     public User resolveUserPasswordAndRole(User user, String role) {
         if (user.getId() == null) {
-            Optional<Role> roleByName = roleRepository.findRoleByName("ROLE_".concat(role));
+            user.setRoles(new HashSet<>());
+            Optional<Role> roleByName = roleRepository.findRoleByName(role);
             user.addRole(roleByName.orElseThrow());
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             return user;
@@ -42,7 +44,7 @@ public class UserResolverImpl implements UserResolver {
             user.setRoles(foundRoles);
             return;
         }
-        Optional<Role> newRole = roleRepository.findRoleByName("ROLE_".concat(role));
+        Optional<Role> newRole = roleRepository.findRoleByName(role);
         if (foundRoles.contains(newRole.orElseThrow())) {
             user.setRoles(foundRoles);
             return;

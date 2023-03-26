@@ -20,4 +20,22 @@ public class UserMapper {
                         .collect(Collectors.toSet()))
                 .build();
     }
+
+    public static User fromDTO(UserDTO userDTO) {
+        User user = new User();
+        if (userDTO.getId() != null) {
+            user.setId(userDTO.getId());
+        }
+        user.setFirstName(userDTO.getFirstName());
+        user.setLastName(userDTO.getLastName());
+        user.setAge(userDTO.getAge());
+        user.setEmail(userDTO.getEmail());
+        user.setPassword(userDTO.getPassword());
+        user.setRoles(userDTO.getRoles()
+                .stream()
+                .map(RoleMapper::fromDTO)
+                .collect(Collectors.toSet()));
+
+        return user;
+    }
 }
