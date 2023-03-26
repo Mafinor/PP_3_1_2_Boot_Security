@@ -10,5 +10,7 @@ public interface UserService {
     Optional<User> findByName(String name);
     Optional<User> findByNameFetch(String name);
     User saveOrUpdate(User user, String role);
+
+    User saveOrUpdate(User user);
     void deleteById(Long id);
 }
