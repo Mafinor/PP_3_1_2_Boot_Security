@@ -1,7 +1,6 @@
 package ru.kata.spring.boot_security.demo.api;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.dto.UserDTO;
 import ru.kata.spring.boot_security.demo.models.User;
@@ -29,19 +28,19 @@ public class UserRestController {
 
     @PostMapping
     public ResponseEntity<UserDTO> addUser(@RequestBody User newUser) {
-        UserDTO userDTO = toDTO(userService.saveOrUpdate(newUser, newUser.getRoles().stream().findAny().orElseThrow().getName()));
+        UserDTO userDTO = toDTO(userService.saveOrUpdate(newUser));
         return ResponseEntity.ok(userDTO);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> oneUser(@PathVariable Long id) {
-        UserDTO userDTO = toDTO(userService.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found")));
+        UserDTO userDTO = toDTO(userService.findById(id));
         return ResponseEntity.ok(userDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDTO> updateUser(@RequestBody User user, @PathVariable Long id) {
-        UserDTO userDTO = toDTO(userService.saveOrUpdate(user, id));
+    public ResponseEntity<UserDTO> updateUser(@RequestBody User user) {
+        UserDTO userDTO = toDTO(userService.saveOrUpdate(user));
         return ResponseEntity.ok(userDTO);
     }
 
