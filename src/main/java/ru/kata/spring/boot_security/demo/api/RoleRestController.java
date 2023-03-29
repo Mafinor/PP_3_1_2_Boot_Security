@@ -14,11 +14,9 @@ import java.util.List;
 @RequestMapping("/api/v1/roles")
 public class RoleRestController {
     private final RoleService roleService;
-
     public RoleRestController(RoleService roleService) {
         this.roleService = roleService;
     }
-
     @GetMapping
     public ResponseEntity<List<RoleDTO>> allRoles() {
         List<RoleDTO> roleDTOS = roleService.findAll().stream().map(RoleMapper::toDTO).toList();
