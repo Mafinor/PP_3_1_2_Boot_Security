@@ -1,9 +1,9 @@
 package ru.kata.spring.boot_security.demo.models;
 
 import org.hibernate.Hibernate;
-import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.util.Collection;
@@ -13,7 +13,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User implements UserDetails, CredentialsContainer {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,8 +40,10 @@ public class User implements UserDetails, CredentialsContainer {
             cascade = {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
-             },
-            mappedBy = "users")
+            })
+    @JoinTable(name = "users_roles",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     private Set<Role> roles = new HashSet<>();
 
     public User() {
@@ -146,11 +148,6 @@ public class User implements UserDetails, CredentialsContainer {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    @Override
-    public void eraseCredentials() {
-        password = null;
     }
 
     @Override
