@@ -4,8 +4,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
+import ru.kata.spring.boot_security.demo.models.User;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -16,9 +16,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userDao.findUserByEmailFetchRoles(username)
+        User user = userDao.findUserByEmailFetchRoles(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Incorrect username or password"));
+        return user;
     }
 }

@@ -27,7 +27,7 @@ public class Role implements GrantedAuthority, Comparable<Role> {
             },
             mappedBy = "roles")
     private Set<User> users = new HashSet<>();
-    
+
     @Override
     public String getAuthority() {
         return name;
